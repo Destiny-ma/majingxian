@@ -1,50 +1,22 @@
-//---------------------------------------------------------------
-// file:     ScrollBar.pde
-//           horizontal scrollbar class for value input
-// based on: http://processing.org/learning/topics/scrollbar.html
-//
-// class:    ScrollBar
-//             ScrollBar   constructor
-//             colorize     set all scrollbar colors
-//             update       update scrollbar and return value
-//             isMouseOver  check if mouse is over scrollbar
-//             setValue     set current value
-//             resetValue   set original start value
-//             randomize    set random value between minValue and maxValue
-//             position     return pixel position of slider
-//             value        return current float value
-//
-// modified: v1.0  2011-03-03 initial release
-//           v1.1  2012-03-23 return value at calling update()
-//---------------------------------------------------------------
 
-boolean globalLock = false;  // true if any scrollbar is locked
+boolean globalLock = false; 
 
 class ScrollBar{
-  int xpos, ypos;         // x and y pixel position of bar
-  int sbWidth, sbHeight;  // width and height of bar
-  float spos, newspos;    // current and intended slider position
-  int smin, smax, sRange;  // min,max & range pixel value of slider
-  int loose = 8;          // how loose/heavy
-  float vmin, vmax, vRange; // min,max & range values of slider
-  float initValue;        // origin value
-  boolean over = false;   // true if mouse is over the scrollbar
-  boolean locked = false; // true if mouse button pressed
-  color barColor       = color(244, 244, 244);  // light gray
-  color frameOffColor  = color(177, 177, 177);  // gray 
-  color frameOnColor   = color(255, 144, 0);  // orange
-  color sliderOffColor = color(102, 102, 102);  // dark gray
-  color sliderOnColor  = color(200, 50, 60);  // wine red
-  
+  int xpos, ypos;  
+  int sbWidth, sbHeight; 
+  float spos, newspos; 
+  int smin, smax, sRange; 
+  int loose = 8;  
+  float vmin, vmax, vRange; 
+  float initValue;
+  boolean over = false; 
+  boolean locked = false;
+  color barColor       = color(244, 244, 244); 
+  color frameOffColor  = color(177, 177, 177);
+  color frameOnColor   = color(255, 144, 0); 
+  color sliderOffColor = color(102, 102, 102); 
+  color sliderOnColor  = color(200, 50, 60); 
   String tag;
-
-  //-------------------------------------------------------------
-  // create horizontal scrollbar:
-  //   xp,yp;               left top scrollbar position
-  //   sWidth,sHeight;      scrollbar dimension
-  //   minValue, maxValue;  value limits 
-  //   startValue           slider start position, added resetValue
-  //-------------------------------------------------------------
   ScrollBar (int xp, int yp, int sWidth, int sHeight, float minValue, float maxValue, float startValue, String st){
     sbWidth = max(40, sWidth);
     sbHeight = max(8, sHeight);
@@ -63,9 +35,6 @@ class ScrollBar{
     setValue (initValue);
   }
 
-  //-------------------------------------------------------------
-  // set all scrollbar colors
-  //-------------------------------------------------------------
   void colorize (color bar, color frameOff, color frameOn, color sliderOff, color sliderOn){
     barColor = bar;
     frameOffColor = frameOff;
@@ -74,10 +43,7 @@ class ScrollBar{
     sliderOnColor = sliderOn;
   }
 
-  //-------------------------------------------------------------
-  // update slider position, draw scrollbar
-  // and return current float value
-  //-------------------------------------------------------------
+
   float update(){
     over = isMouseOver();
     if (!globalLock && mousePressed && over){ 
@@ -97,13 +63,11 @@ class ScrollBar{
     }
 
     colorMode(RGB);
-    // draw scrollbar
     fill (barColor);
     if (locked) stroke(frameOnColor);
     else        stroke(frameOffColor);
     rect(xpos, ypos, sbWidth, sbHeight); 
    
-    // draw slider
     if ((over && !globalLock)
       || locked) fill(sliderOnColor);
     else       fill(sliderOffColor);
@@ -112,47 +76,29 @@ class ScrollBar{
 
     return value();
   }
-
-  //-------------------------------------------------------------
-  // check if mouse is over scrollbar
-  //-------------------------------------------------------------
+  
   boolean isMouseOver(){ 
     return (mouseX > xpos && mouseX < xpos+sbWidth && mouseY > ypos && mouseY < ypos+sbHeight);
   }
 
-  //-------------------------------------------------------------
-  // set current value
-  //-------------------------------------------------------------
   void setValue (float value){
     value = constrain (value, vmin, vmax);
     spos = smin + sRange * (value-vmin) / vRange;
     newspos = spos;
   }
 
-  //-------------------------------------------------------------
-  // reset current value to origin value
-  //-------------------------------------------------------------
   void resetValue(){ 
     setValue(initValue);
   }
 
-  //-------------------------------------------------------------
-  // set random value between minValue and maxValue
-  //-------------------------------------------------------------
   void randomize(){ 
     setValue (vmin + random(vRange));
   }
 
-  //-------------------------------------------------------------
-  // return pixel position of slider
-  //-------------------------------------------------------------
   int position(){ 
     return round(spos);
   }
 
-  //-------------------------------------------------------------
-  // return current float value (between minValue and maxValue)
-  //-------------------------------------------------------------
   float value(){ 
     return vmin + vRange * (int(spos)-smin) / sRange;
   }

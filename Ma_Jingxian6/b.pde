@@ -12,9 +12,9 @@ void setup() {
 
 void a() {
   sbar1 = new ScrollBar(11, 22, 200, 10, 0, 255, 160, "1");
-  sbar1.setValue(161);//sbar1.randomize();
+  sbar1.setValue(161);
   sbar2 = new ScrollBar(11, 42, 200, 10, 0, 255, 160, "2");
-  sbar2.setValue(161);//sbar1.randomize();
+  sbar2.setValue(161);
 }
 
 void draw(){
